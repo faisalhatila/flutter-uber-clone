@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:uberapp/AllScreens/loginScreen.dart';
 import 'package:uberapp/AllScreens/mainScreen.dart';
 
 class RegistrationScreen extends StatelessWidget {
+  static const idScreen = "register";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,7 +124,8 @@ class RegistrationScreen extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    print("Button pressed");
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, LoginScreen.idScreen, (route) => false);
                   },
                   child: Text(
                     "Already have an Account? Login Here.",
