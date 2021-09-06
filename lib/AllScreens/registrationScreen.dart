@@ -1,9 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uberapp/AllScreens/loginScreen.dart';
 import 'package:uberapp/AllScreens/mainScreen.dart';
+import 'package:uberapp/main.dart';
 
 class RegistrationScreen extends StatelessWidget {
   static const idScreen = "register";
+
+  TextEditingController nameTextEditingController = TextEditingController();
+  TextEditingController emailTextEditingController = TextEditingController();
+  TextEditingController phoneTextEditingController = TextEditingController();
+  TextEditingController passwordTextEditingController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +51,7 @@ class RegistrationScreen extends StatelessWidget {
                         height: 1.0,
                       ),
                       TextField(
+                        controller: nameTextEditingController,
                         keyboardType: TextInputType.text,
                         decoration: InputDecoration(
                             labelText: "Name",
@@ -56,6 +66,7 @@ class RegistrationScreen extends StatelessWidget {
                         height: 1.0,
                       ),
                       TextField(
+                        controller: emailTextEditingController,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                             labelText: "Email",
@@ -70,6 +81,7 @@ class RegistrationScreen extends StatelessWidget {
                         height: 1.0,
                       ),
                       TextField(
+                        controller: phoneTextEditingController,
                         keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
                             labelText: "Phone",
@@ -84,6 +96,7 @@ class RegistrationScreen extends StatelessWidget {
                         height: 1.0,
                       ),
                       TextField(
+                        controller: passwordTextEditingController,
                         obscureText: true,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
@@ -104,7 +117,25 @@ class RegistrationScreen extends StatelessWidget {
                               MaterialStateProperty.all(Colors.yellow),
                         ),
                         onPressed: () {
-                          print("Login Clicked");
+                          if (nameTextEditingController.text.length < 3) {
+                            displayToastMessage(
+                                "Name must be atleast 3 characters", context);
+                          }
+                          if (!emailTextEditingController.text.contains("@")) {
+                            displayToastMessage(
+                                "Please enter valid email", context);
+                          }
+                          if (phoneTextEditingController.text.isEmpty) {
+                            displayToastMessage(
+                                "Phone no is mandatory", context);
+                          }
+                          if (passwordTextEditingController.text.length < 6) {
+                            displayToastMessage(
+                                "Password must be atleast 6 characters",
+                                context);
+                          } else {
+                            registerNewUser(context);
+                          }
                         },
                         child: Container(
                           height: 50.0,
@@ -141,4 +172,35 @@ class RegistrationScreen extends StatelessWidget {
       ),
     );
   }
+
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  void registerNewUser(BuildContext context) async {
+    final User? firebaseUser = (await _firebaseAuth
+            .createUserWithEmailAndPassword(
+                email: emailTextEditingController.text,
+                password: passwordTextEditingController.text)
+            .catchError((errMsg) {
+      displayToastMessage("Error: " + errMsg.toString(), context);
+    }))
+        .user;
+
+    if (firebaseUser != null) {
+      Map userDataMap = {
+        "name": nameTextEditingController.text.trim(),
+        "email": emailTextEditingController.text.trim(),
+        "phone": phoneTextEditingController.text.trim(),
+      };
+      usersRef.child(firebaseUser.uid).set(userDataMap);
+      displayToastMessage(
+          "Congratulations, your account has been created", context);
+      Navigator.pushNamedAndRemoveUntil(
+          context, MainScreen.idScreen, (route) => false);
+    } else {
+      displayToastMessage("User has not been created", context);
+    }
+  }
+}
+
+displayToastMessage(String message, BuildContext context) {
+  Fluttertoast.showToast(msg: message);
 }
