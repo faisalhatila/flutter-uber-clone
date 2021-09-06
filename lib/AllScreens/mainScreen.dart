@@ -13,6 +13,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
   late GoogleMapController newGoogleMapController;
+  GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
@@ -21,11 +22,91 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Center(
           child: Text(
             "Main Screen",
             textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+      drawer: Container(
+        color: Colors.white,
+        width: 255.0,
+        child: Drawer(
+          child: ListView(
+            children: [
+              Container(
+                height: 165.0,
+                child: DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        "images/user_icon.png",
+                        height: 65.0,
+                        width: 65.0,
+                      ),
+                      SizedBox(
+                        width: 16.0,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Profile Name",
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontFamily: "Brand-Bold",
+                            ),
+                          ),
+                          SizedBox(
+                            height: 6.0,
+                          ),
+                          Text(
+                            "View Profile",
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              DividerWidget(),
+              SizedBox(
+                height: 12.0,
+              ),
+              ListTile(
+                leading: Icon(Icons.history),
+                title: Text(
+                  "History",
+                  style: TextStyle(
+                    fontSize: 15.0,
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.person),
+                title: Text(
+                  "Visit Profile",
+                  style: TextStyle(
+                    fontSize: 15.0,
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.info),
+                title: Text(
+                  "About",
+                  style: TextStyle(
+                    fontSize: 15.0,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -39,6 +120,37 @@ class _MainScreenState extends State<MainScreen> {
               _controllerGoogleMap.complete(controller);
               newGoogleMapController = controller;
             },
+          ),
+          Positioned(
+            top: 45.0,
+            left: 22.0,
+            child: GestureDetector(
+              onTap: () {
+                scaffoldKey.currentState!.openDrawer();
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(22.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      blurRadius: 6.0,
+                      spreadRadius: 0.5,
+                      offset: Offset(0.7, 0.7),
+                    )
+                  ],
+                ),
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    Icons.menu,
+                    color: Colors.black,
+                  ),
+                  radius: 20.0,
+                ),
+              ),
+            ),
           ),
           Positioned(
             left: 0.0,
