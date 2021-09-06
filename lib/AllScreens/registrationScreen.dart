@@ -120,16 +120,15 @@ class RegistrationScreen extends StatelessWidget {
                           if (nameTextEditingController.text.length < 3) {
                             displayToastMessage(
                                 "Name must be atleast 3 characters", context);
-                          }
-                          if (!emailTextEditingController.text.contains("@")) {
+                          } else if (!emailTextEditingController.text
+                              .contains("@")) {
                             displayToastMessage(
                                 "Please enter valid email", context);
-                          }
-                          if (phoneTextEditingController.text.isEmpty) {
+                          } else if (phoneTextEditingController.text.isEmpty) {
                             displayToastMessage(
                                 "Phone no is mandatory", context);
-                          }
-                          if (passwordTextEditingController.text.length < 6) {
+                          } else if (passwordTextEditingController.text.length <
+                              6) {
                             displayToastMessage(
                                 "Password must be atleast 6 characters",
                                 context);
