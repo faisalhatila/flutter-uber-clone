@@ -38,6 +38,8 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   static final CameraPosition _kGooglePlex = CameraPosition(
+    // target: LatLng(37.42796133580664, -122.085749655962),
+    // target: LatLng(24.940468832148692, 67.07817971319395),
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
